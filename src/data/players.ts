@@ -21,5 +21,19 @@ export const players: Player[] = [
         team: "Chicago Cubs",
         position: "CF",
         battingAvg: ".282/.320/.811",
+    },
+    {
+        id: 4,
+        name: "Logan Gilbert",
+        team: "Seattle Mariners",
+        position: "P",
+        era: "3.69",
+    },
+    {
+        id: 5,
+        name: "Kazuma Okamoto",
+        team: "Toronto Blue Jays",
+        position: "3B",
+        battingAvg: ".235/.464/.774",
     }
 ]

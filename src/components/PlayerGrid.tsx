@@ -1,4 +1,3 @@
-import { players } from "../data/players";
 import type { Player } from "../types/player";
 import PlayerCard from "./PlayerCard";
 
