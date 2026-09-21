@@ -1,5 +1,6 @@
 import { players } from "../data/players";
 import { Link, useParams } from "react-router-dom"
+import StatCard from "../components/StatCard";
 // interface PlayerDetailsProps {
 //     player: Player;
 // }
@@ -30,7 +31,7 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                 <div className="md:flex">
                     <div className="md:w-1/3">
                         <img 
-                            src='src/assets/player_placeholder.jpg' 
+                            src='/src/assets/player_placeholder.jpg' 
                             alt='Player Name (placeholder)' 
                             className='w-full h-80 md:h-full object-cover'
                         />
@@ -57,7 +58,7 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                 </div>
             </div>
             <div className="max-w-5xl mx-auto mt-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
+                {/* <h2 className="text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
                 <div className="grid gird-cols-1 md:grid-cols-3 gap-4">
                     <p className="bg-white rounded-xl shadow-sm p-6">Team</p>
                     <p className="text-lg font-semibold mt-1">{player.team}</p>
@@ -74,8 +75,27 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                     <p className="text-lg font-semibold mt-1">
                     {player.id}
                     </p>
+                </div> */}
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                    Statistics
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <StatCard 
+                        label="Team"
+                        value={player.team}
+                    />
+                    <StatCard 
+                        label="Position"
+                        value={player.position}
+                    />
+                    <StatCard 
+                        label={player.position === "P" ? "ERA" : "Slashline"}
+                        value={
+                            player.position === "P" ? player.era ?? "N/A" : player.battingAvg ?? "N/A"
+                        }
+                    />
                 </div>
             </div>
         </div>
-    )
+    );
 }
