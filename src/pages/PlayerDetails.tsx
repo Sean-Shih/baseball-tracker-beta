@@ -1,6 +1,7 @@
-import { players } from "../data/players";
 import { Link, useParams } from "react-router-dom"
 import StatCard from "../components/StatCard";
+import { useEffect, useState } from "react";
+import type { Player } from "../types/player";
 // interface PlayerDetailsProps {
 //     player: Player;
 // }
@@ -9,7 +10,37 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
 
     const { id } = useParams();
 
-    const player = players.find((player) => player.id === Number(id))
+    const [player, setPlayer] = useState<Player | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/players/${id}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Player not found")
+                }
+
+                return response.json();
+            })
+            .then((data) =>{
+                setPlayer(data);
+            })
+            .catch((error) => {
+                setError(error.message)
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [id]);
+
+    if (loading) return <p>Loading Player...</p>
+
+    if (error) return <p>Error: {error}</p>
+
+    if (!player) return <p>Player not found</p>
+
+    // const player = players.find((player) => player.id === Number(id))
 
     if (!player) {
         return (
@@ -98,4 +129,12 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
             </div>
         </div>
     );
+
+    // return (
+    //     <div>
+    //         <h1>{player.name}</h1>
+    //         <p>{player.team}</p>
+    //         <p>{player.position}</p>
+    //     </div>
+    // );
 }
