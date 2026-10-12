@@ -17,9 +17,12 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
     useEffect(() => {
         fetch(`http://localhost:8080/api/players/${id}`)
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Player not found")
+                if (response.status === 404) {
+                    setPlayer(null);
+                    return null;
                 }
+
+                if (!response.ok) throw new Error("Failed to fetch player");
 
                 return response.json();
             })
@@ -27,7 +30,8 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                 setPlayer(data);
             })
             .catch((error) => {
-                setError(error.message)
+                console.error("Error fetching player:", error);
+                setError("Unable to fetch player details. Please try again.");
             })
             .finally(() => {
                 setLoading(false);
