@@ -6,9 +6,13 @@ import AddPlayerForm from "../components/AddPlayerForm";
 import EditPlayerForm from "../components/EditPlayerForm";
 
 function Home() {
+
   const [searchTerm, setSearchTerm] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
 
   const fetchPlayers = () => {
     fetch("http://localhost:8080/api/players")
@@ -45,6 +49,30 @@ function Home() {
     setEditingPlayer(player);
   };
 
+  const handleDeletePlayer = (player: Player) => {
+    const confirmed = window.confirm(`Are you sure you want to delete ${player.name}?`);
+
+    if (!confirmed) return;
+    
+    setIsDeleting(true);
+    setDeleteError("");
+
+    fetch(`http://localhost:8080/api/players/${player.id}`, {
+      method: "DELETE"
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to delete player");
+      }
+
+      fetchPlayers();
+    }).catch((error) => {
+      console.error("Error deleting player:", error);
+      setDeleteError("Failed to delete player. Please try again.")
+    }).finally(() => {
+      setIsDeleting(false);
+    });
+  };
+
   return (
     <>
       <SearchBar onSearch={setSearchTerm} />
@@ -75,11 +103,16 @@ function Home() {
         
       )}
     
-    
+      {deleteError && (
+        <p role="alert" className="mb-4 text-red-600">
+          {deleteError}
+        </p>
+      )}
 
       <PlayerGrid 
         players={filteredPlayers} 
         onEdit={handleEditPlayer}
+        onDelete={handleDeletePlayer}
       />
       <AddPlayerForm onPlayerAdded={handlePlayerAdded}/>
     </>

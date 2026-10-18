@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 interface PlayerCardProps {
     player: Player;
     onEdit: (player: Player) => void;
+    onDelete: (player: Player) => void;
 }
 
- export default function PlayerCard({ player, onEdit }: PlayerCardProps) {
+ export default function PlayerCard({ player, onEdit, onDelete }: PlayerCardProps) {
 
     return (
         <div className="w-full max-w-72">
@@ -26,9 +27,16 @@ interface PlayerCardProps {
             <button
                 type="button"
                 onClick={() => onEdit(player)}
-                className="mt-2 w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
                 Edit
+            </button>
+            <button 
+                type="button"
+                onClick={() => onDelete(player)}
+                className="flex-1 rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+            >
+                Delete
             </button>
         </div>
 

@@ -4,9 +4,10 @@ import PlayerCard from "./PlayerCard";
 interface PlayerGridProps {
     players: Player[];
     onEdit: (player: Player) => void;
+    onDelete: (player: Player) => void;
 }
 
-export default function PlayerGrid( {players, onEdit }: PlayerGridProps) {
+export default function PlayerGrid( {players, onEdit, onDelete }: PlayerGridProps) {
 
     return (
         <div id='playerCards' 
@@ -22,6 +23,7 @@ export default function PlayerGrid( {players, onEdit }: PlayerGridProps) {
                     key={player.id}
                     player={player}
                     onEdit={onEdit}
+                    onDelete={onDelete}
                 />
             ))}
         </div>
