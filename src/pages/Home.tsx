@@ -59,17 +59,23 @@ function Home() {
         </h2>
       </div>
 
+      
       {editingPlayer && (
-        <EditPlayerForm 
-          key={editingPlayer.id}
-          player={editingPlayer}
-          onPlayerUpdated={() => {
-            setEditingPlayer(null);
-            fetchPlayers();
-          }}  
-          onCancel={() => setEditingPlayer(null)}
-        />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blend-darken backdrop-contrast-50">
+          <EditPlayerForm
+            key={editingPlayer.id}
+            player={editingPlayer}
+            onPlayerUpdated={() => {
+              setEditingPlayer(null);
+              fetchPlayers();
+            }}  
+            onCancel={() => setEditingPlayer(null)}
+          />
+        </div>
+        
       )}
+    
+    
 
       <PlayerGrid 
         players={filteredPlayers} 
