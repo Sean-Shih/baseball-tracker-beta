@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import PlayerGrid from "../components/PlayerGrid";
 import type { Player } from "../types/player";
+import AddPlayerForm from "../components/AddPlayerForm";
+import EditPlayerForm from "../components/EditPlayerForm";
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
+  const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
 
-  useEffect(() => {
+  const fetchPlayers = () => {
     fetch("http://localhost:8080/api/players")
       .then((response) => {
         if (!response.ok) {
@@ -22,6 +25,14 @@ function Home() {
       .catch((error) => {
         console.error("Error fetching players:", error);
       });
+  };
+
+  const handlePlayerAdded = () => {
+    fetchPlayers();
+  };
+
+  useEffect(() => {
+    fetchPlayers();
   }, []);
 
   const filteredPlayers = players.filter(
@@ -29,6 +40,10 @@ function Home() {
       player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       player.team.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleEditPlayer = (player : Player) => {
+    setEditingPlayer(player);
+  };
 
   return (
     <>
@@ -44,7 +59,23 @@ function Home() {
         </h2>
       </div>
 
-      <PlayerGrid players={filteredPlayers} />
+      {editingPlayer && (
+        <EditPlayerForm 
+          key={editingPlayer.id}
+          player={editingPlayer}
+          onPlayerUpdated={() => {
+            setEditingPlayer(null);
+            fetchPlayers();
+          }}  
+          onCancel={() => setEditingPlayer(null)}
+        />
+      )}
+
+      <PlayerGrid 
+        players={filteredPlayers} 
+        onEdit={handleEditPlayer}
+      />
+      <AddPlayerForm onPlayerAdded={handlePlayerAdded}/>
     </>
   );
 }

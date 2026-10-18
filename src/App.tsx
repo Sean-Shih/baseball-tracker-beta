@@ -15,7 +15,6 @@ function App() {
           <Route path='/player/:id' element={<PlayerDetails />}/>
         </Routes>
       </BrowserRouter>
-      <AddPlayerForm/>
     </>
   );
   
