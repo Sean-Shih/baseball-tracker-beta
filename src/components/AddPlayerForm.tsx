@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import type { ApiErrorResponse } from "../types/player";
 
 type AddPlayerFormProps = {
     onPlayerAdded: () => void;
@@ -35,18 +36,25 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(playerData)
-        }).then((response) =>  {
-            if (!response.ok) throw new Error("Failed to add new player");
+        }).then( async (response) =>  {
+            if (!response.ok) {
+                const errorData: ApiErrorResponse = await response.json();
+
+                const errorMessage = errorData.errors ? Object.values(errorData.errors).join(" ")
+                    : errorData.message;
+
+                throw new Error(errorMessage || "Failed to add player.");
+            }
 
             return response.json();
-        }).then((data) => {
-            console.log("Player added successfully:", data);
-
-            onPlayerAdded();
+        }).then((savedPlayer) => {
+            console.log("Player added successfully:", savedPlayer);
 
             // setIsSubmitting(false)
             setSuccessMessage("Player added successfully!");
-            setErrorMessage("")
+            setErrorMessage("");
+
+            onPlayerAdded();
 
             setName("");
             setTeam("");
@@ -58,7 +66,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
             console.log("Error adding player:", error)
 
             // setIsSubmitting(false);
-            setErrorMessage("Failed to add player. Please try again.");
+            setErrorMessage(error instanceof Error ? error.message : "An unexpected error occured.");
             setSuccessMessage("");
         }).finally(() => {
             setIsSubmitting(false);
@@ -69,12 +77,12 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
     return (
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
             {successMessage && (
-                <p className="text-green-600">
+                <p className="text-green-600" role="status">
                     {successMessage}
                 </p>
             )}
             {errorMessage && (
-                <p className="text-red-600">
+                <p className="text-red-600" role="alert">
                     {errorMessage}
                 </p>
             )}
@@ -147,7 +155,11 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                     step={0.01}
                 />
             </div>
-            <button type="submit" className="w-full rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-700 transition duration-150 ease-in-out">
+            <button 
+                type="submit" 
+                className="w-full rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-700 transition duration-150 ease-in-out"
+                disabled={isSubmitting}
+            >
                 {isSubmitting ? "Adding Player..." : "Add Player"}
             </button>
         </form>

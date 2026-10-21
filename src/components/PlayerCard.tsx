@@ -12,7 +12,7 @@ interface PlayerCardProps {
     return (
         <div className="w-full max-w-72">
             <Link to={`player/${player.id}`}>
-                <div className='w-full max-w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl border'>
+                <div className='w-full max-w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl'>
                     <img src='src/assets/player_placeholder.jpg' alt='Player Name (placeholder)' className='h-80 w-72 object-cover rounded-t-xl'></img>
                     <div className='px-4 py-3 w-72'>
                         <span className='text-gray-500 mr-3 uppercase text-xs'>{player.team}</span>

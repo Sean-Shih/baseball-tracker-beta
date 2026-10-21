@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import type { Player } from "../types/player";
+import type { ApiErrorResponse } from "../types/player";
 // import { eventLoopUtilization } from "perf_hooks";
 // import { PrefetchPageLinks } from "react-router-dom";
 
@@ -47,19 +48,30 @@ export default function EditPlayerForm({
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(playerData)
-        }).then((response) =>  {
-            if (!response.ok) throw new Error("Failed to update player");
+        }).then( async (response) =>  {
+            if (!response.ok) {
+                const errorData: ApiErrorResponse = await response.json();
+
+                const errorMessage = errorData.errors ? Object.values(errorData.errors).join(" ")
+                    : errorData.message;
+                
+                throw new Error(errorMessage || "Failed to edit player")
+            }
 
             return response.json();
-        }).then((data) => {
-            console.log("Player updated successfully:", data);
+        }).then((editedPlayer) => {
+            console.log("Player updated successfully:", editedPlayer);
+
             setSuccessMessage("Player updated successfully!");
+            setErrorMessage("");
+            
             onPlayerUpdated();
+
         }).catch((error) => {
             console.log("Error updating player:", error)
 
             // setIsSubmitting(false);
-            setErrorMessage("Failed to update player. Please try again.");
+            setErrorMessage(error instanceof Error ? error.message : "An unexpected error occured");
         }).finally(()=> {
             setIsSubmitting(false);
         });
