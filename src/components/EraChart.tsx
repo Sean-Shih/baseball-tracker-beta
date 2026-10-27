@@ -29,7 +29,7 @@ export default function EraChart({
     }
 
     return (
-        <section className="rounded-xl bg-white p-4 shadow-sm">
+        <section className="rounded-xl bg-white p-4 shadow-sm mx-6">
             <h2 className="mb-4 text-xl font-semibold">
                 Pitcher ERA Comparison
             </h2>

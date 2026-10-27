@@ -18,7 +18,7 @@ export default function PlayerFilters({
     onReset,
 }: PlayerFiltersProps) {
     return (
-        <div className="mb-6 flex flex-wrap items-end gap-4">
+        <div className=" flex flex-wrap items-end gap-4 mx-8 ">
             <div className="flex flex-col gap-1">
                 <label htmlFor="team-filter">
                     Team

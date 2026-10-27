@@ -10,6 +10,8 @@ import PlayerFilters from "../components/PlayerFilters";
 import BattingAverageChart from "../components/BattingAverageChart";
 import EraChart from "../components/EraChart";
 
+import AnalyticsSummary from "../components/AnalyticsSummary";
+
 function Home() {
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -144,25 +146,11 @@ function Home() {
         </h2>
       </div>
 
-      <PlayerFilters
-        teams={teams}
-        positions={positions}
-        selectedTeam={selectedTeam}
-        selectedPosition={selectedPosition}
-        onTeamChange={setSelectedTeam}
-        onPositionChange={setSelectedPosition}
-        onReset={() => {
-            setSearchTerm("");
-            setSelectedTeam("All");
-            setSelectedPosition("All");
-        }}
-      />
+
+
       <SearchBar onSearch={setSearchTerm} />
 
-      <p className="mb-4 text-sm text-gray-500">
-        Showing {filteredPlayers.length} of {players.length} players
-      </p>
-
+      
       {editingPlayer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blend-darken backdrop-contrast-50">
           <EditPlayerForm
@@ -212,41 +200,62 @@ function Home() {
           </div>
           
         ) : (
-        <div>
-          <div className="mb-4 flex gap-2">
-            <button
-              onClick={() => setViewMode("cards")}
-              className={`rounded-lg px-4 py-2 ${viewMode === "cards" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
-            >
-              Card View
-            </button>
-            <button
-              onClick={() => setViewMode("table")}
-              className={`rounded-lg px-4 py-2 ${viewMode === "table" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
-            >
-              Table View
-            </button>
-          </div>
+          <div>
+            <div className="mb-4 flex gap-2 mx-6">
+              <button
+                onClick={() => setViewMode("cards")}
+                className={`rounded-lg px-4 py-2 ${viewMode === "cards" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
+              >
+                Card View
+              </button>
+              <button
+                onClick={() => setViewMode("table")}
+                className={`rounded-lg px-4 py-2 ${viewMode === "table" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
+              >
+                Table View
+              </button>
 
-          <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <BattingAverageChart players={players} />
+              <PlayerFilters
+                teams={teams}
+                positions={positions}
+                selectedTeam={selectedTeam}
+                selectedPosition={selectedPosition}
+                onTeamChange={setSelectedTeam}
+                onPositionChange={setSelectedPosition}
+                onReset={() => {
+                    setSearchTerm("");
+                    setSelectedTeam("All");
+                    setSelectedPosition("All");
+                }}
+              />
 
-            <EraChart players={players} />
-          </div>
+              <p className="mb-4 text-sm text-gray-500 mx-6">
+                Showing {filteredPlayers.length} of {players.length} players
+              </p>
 
-          {viewMode === "cards" ? (
-            <PlayerGrid 
-              players={filteredPlayers}
-              onEdit={handleEditPlayer}
-              onDelete={handleDeletePlayer}
-            />
-          ) : (
-            <PlayerTable 
-              players={filteredPlayers}
-              onEdit={handleEditPlayer}
-              onDelete={handleDeletePlayer}
-            />
-          )}
+            </div>
+
+            {viewMode === "cards" ? (
+              <PlayerGrid 
+                players={filteredPlayers}
+                onEdit={handleEditPlayer}
+                onDelete={handleDeletePlayer}
+              />
+            ) : (
+              <PlayerTable 
+                players={filteredPlayers}
+                onEdit={handleEditPlayer}
+                onDelete={handleDeletePlayer}
+              />
+            )}
+
+            <AnalyticsSummary players={players}/>
+
+            <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <BattingAverageChart players={players} />
+
+              <EraChart players={players} />
+            </div>
           </div>
         )}
       <AddPlayerForm onPlayerAdded={handlePlayerAdded}/>
