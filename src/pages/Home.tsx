@@ -5,6 +5,7 @@ import type { Player } from "../types/player";
 import AddPlayerForm from "../components/AddPlayerForm";
 import EditPlayerForm from "../components/EditPlayerForm";
 import PlayerTable from "../components/PlayerTable";
+import PlayerFilters from "../components/PlayerFilters";
 
 function Home() {
 
@@ -18,7 +19,8 @@ function Home() {
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
   const [selectedTeam, setSelectedTeam] = useState("All");
-  const [selectPosition, setSelectPosition] = useState("All");
+
+  const [selectedPosition, setSelectedPosition] = useState("All");
 
   const teams = [
     "All",
@@ -26,8 +28,8 @@ function Home() {
   ];
 
   const positions = [
-    "All",
-    ...new Set(players.map((player) => player.position)),
+      "All",
+      ...new Set(players.map((player) => player.position)),
   ];
 
   const totalPlayers = players.length;
@@ -80,20 +82,21 @@ function Home() {
   // );
 
   const filteredPlayers = players.filter((player) => {
-
     const query = searchTerm.trim().toLowerCase();
 
-    const matchesSearch = 
-      player.name.toLowerCase().includes(query) || 
+    const matchesSearch =
+      player.name.toLowerCase().includes(query) ||
       player.team.toLowerCase().includes(query);
 
-    const matchesTeam = selectedTeam === "All" || player.team === selectedTeam;
-    const matchesPosition = selectPosition === "All" || player.position === selectPosition;
+    const matchesTeam =
+      selectedTeam === "All" ||
+      player.team === selectedTeam;
 
-    return (
-      matchesSearch && matchesTeam && matchesPosition
-    );
+    const matchesPosition =
+      selectedPosition === "All" ||
+      player.position === selectedPosition;
 
+    return matchesSearch && matchesTeam && matchesPosition;
   });
 
   const handleEditPlayer = (player : Player) => {
@@ -126,7 +129,7 @@ function Home() {
 
   return (
     <div className="bg-gray-100">
-      <SearchBar onSearch={setSearchTerm} />
+      
 
       <div className="text-center p-10 pt-6">
         <h1 className="font-bold text-4xl mb-4">
@@ -138,7 +141,25 @@ function Home() {
         </h2>
       </div>
 
-      
+      <PlayerFilters
+        teams={teams}
+        positions={positions}
+        selectedTeam={selectedTeam}
+        selectedPosition={selectedPosition}
+        onTeamChange={setSelectedTeam}
+        onPositionChange={setSelectedPosition}
+        onReset={() => {
+            setSearchTerm("");
+            setSelectedTeam("All");
+            setSelectedPosition("All");
+        }}
+      />
+      <SearchBar onSearch={setSearchTerm} />
+
+      <p className="mb-4 text-sm text-gray-500">
+        Showing {filteredPlayers.length} of {players.length} players
+      </p>
+
       {editingPlayer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blend-darken backdrop-contrast-50">
           <EditPlayerForm
@@ -206,13 +227,13 @@ function Home() {
 
           {viewMode === "cards" ? (
             <PlayerGrid 
-              players={players}
+              players={filteredPlayers}
               onEdit={handleEditPlayer}
               onDelete={handleDeletePlayer}
             />
           ) : (
             <PlayerTable 
-              players={players}
+              players={filteredPlayers}
               onEdit={handleEditPlayer}
               onDelete={handleDeletePlayer}
             />
