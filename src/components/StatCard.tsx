@@ -5,7 +5,7 @@ interface StatCardProps {
 
 export default function StatCard({ label, value }: StatCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border p-6 transition duration-200 hover:shadow-md">
+    <div className="bg-white rounded-xl shadow-sm p-6 transition duration-200 hover:shadow-md">
       <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
         {label}
       </p>

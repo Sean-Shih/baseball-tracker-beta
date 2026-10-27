@@ -4,6 +4,7 @@ import PlayerGrid from "../components/PlayerGrid";
 import type { Player } from "../types/player";
 import AddPlayerForm from "../components/AddPlayerForm";
 import EditPlayerForm from "../components/EditPlayerForm";
+import PlayerTable from "../components/PlayerTable";
 
 function Home() {
 
@@ -14,7 +15,28 @@ function Home() {
   const [deleteError, setDeleteError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
+  const [selectedTeam, setSelectedTeam] = useState("All");
+  const [selectPosition, setSelectPosition] = useState("All");
+
+  const teams = [
+    "All",
+    ...new Set(players.map((player) => player.team)),
+  ];
+
+  const positions = [
+    "All",
+    ...new Set(players.map((player) => player.position)),
+  ];
+
+  const totalPlayers = players.length;
+
+  const totalPitchers = players.filter(
+    (player) => player.position === "P"
+  ).length;
+
+  const totalPositionPlayers = totalPlayers - totalPitchers;
 
   const fetchPlayers = async () => {
 
@@ -41,20 +63,6 @@ function Home() {
     } finally {
       setIsLoading(false);
     }
-    // fetch("http://localhost:8080/api/players")
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Failed to fetch players");
-    //     }
-
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setPlayers(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching players:", error);
-    //   });
   };
 
   const handlePlayerAdded = () => {
@@ -65,11 +73,28 @@ function Home() {
     fetchPlayers();
   }, []);
 
-  const filteredPlayers = players.filter(
-    (player) =>
-      player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      player.team.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredPlayers = players.filter(
+  //   (player) =>
+  //     player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     player.team.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+  const filteredPlayers = players.filter((player) => {
+
+    const query = searchTerm.trim().toLowerCase();
+
+    const matchesSearch = 
+      player.name.toLowerCase().includes(query) || 
+      player.team.toLowerCase().includes(query);
+
+    const matchesTeam = selectedTeam === "All" || player.team === selectedTeam;
+    const matchesPosition = selectPosition === "All" || player.position === selectPosition;
+
+    return (
+      matchesSearch && matchesTeam && matchesPosition
+    );
+
+  });
 
   const handleEditPlayer = (player : Player) => {
     setEditingPlayer(player);
@@ -100,7 +125,7 @@ function Home() {
   };
 
   return (
-    <div className="bg-gray-200">
+    <div className="bg-gray-100">
       <SearchBar onSearch={setSearchTerm} />
 
       <div className="text-center p-10 pt-6">
@@ -126,7 +151,6 @@ function Home() {
             onCancel={() => setEditingPlayer(null)}
           />
         </div>
-        
       )}
     
       {deleteError && (
@@ -164,11 +188,36 @@ function Home() {
           </div>
           
         ) : (
-          <PlayerGrid 
-            players={filteredPlayers}
-            onEdit={handleEditPlayer}
-            onDelete={handleDeletePlayer}
-          />
+        <div>
+          <div className="mb-4 flex gap-2">
+            <button
+              onClick={() => setViewMode("cards")}
+              className={`rounded-lg px-4 py-2 ${viewMode === "cards" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
+            >
+              Card View
+            </button>
+            <button
+              onClick={() => setViewMode("table")}
+              className={`rounded-lg px-4 py-2 ${viewMode === "table" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
+            >
+              Table View
+            </button>
+          </div>
+
+          {viewMode === "cards" ? (
+            <PlayerGrid 
+              players={players}
+              onEdit={handleEditPlayer}
+              onDelete={handleDeletePlayer}
+            />
+          ) : (
+            <PlayerTable 
+              players={players}
+              onEdit={handleEditPlayer}
+              onDelete={handleDeletePlayer}
+            />
+          )}
+          </div>
         )}
       <AddPlayerForm onPlayerAdded={handlePlayerAdded}/>
     </div>

@@ -95,13 +95,6 @@ interface PlayerCardProps {
                         </button>
                     </div>
                 )}
-                {/* <button 
-                    type="button"
-                    onClick={() => onDelete(player)}
-                    className="flex-1 rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-                >
-                    Delete
-                </button> */}
             </div>
         </div>
 
