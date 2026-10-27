@@ -7,6 +7,9 @@ import EditPlayerForm from "../components/EditPlayerForm";
 import PlayerTable from "../components/PlayerTable";
 import PlayerFilters from "../components/PlayerFilters";
 
+import BattingAverageChart from "../components/BattingAverageChart";
+import EraChart from "../components/EraChart";
+
 function Home() {
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -223,6 +226,12 @@ function Home() {
             >
               Table View
             </button>
+          </div>
+
+          <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <BattingAverageChart players={players} />
+
+            <EraChart players={players} />
           </div>
 
           {viewMode === "cards" ? (
