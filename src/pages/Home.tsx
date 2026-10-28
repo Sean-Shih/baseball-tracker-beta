@@ -172,6 +172,42 @@ function Home() {
       )}
 
       
+      {!isLoading && !fetchError && (
+        <div className="mx-auto mb-6 flex max-w-7xl flex-wrap items-end gap-4 px-6">
+          <div className="inline-flex rounded-lg bg-gray-200 p-1">
+            {(["cards", "table"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setViewMode(mode)}
+                className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${
+                  viewMode === mode ? "bg-white text-gray-900 shadow-sm" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {mode === "cards" ? "Card View" : "Table View"}
+              </button>
+            ))}
+          </div>
+          <PlayerFilters 
+            teams={teams}
+            positions={positions}
+            selectedTeam={selectedTeam}
+            selectedPosition={selectedPosition}
+            onTeamChange={setSelectedTeam}
+            onPositionChange={setSelectedPosition}
+            onReset={() => {
+              setSearchTerm("");
+              setSelectedTeam("All");
+              setSelectedPosition("All");
+            }}
+          />
+
+          <p className="ml-auto pb-2 text-sm text-gray-500">
+            Showing {filteredPlayers.length} of {players.length} players
+          </p>
+        </div>
+      )}
+
       {isLoading ? (
         <p className="text-center py-8">
           Loading players...
@@ -201,7 +237,7 @@ function Home() {
           
         ) : (
           <div>
-            <div className="mb-4 flex gap-2 mx-6">
+            {/* <div className="mb-4 flex gap-2 mx-6">
               <button
                 onClick={() => setViewMode("cards")}
                 className={`rounded-lg px-4 py-2 ${viewMode === "cards" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
@@ -233,7 +269,13 @@ function Home() {
                 Showing {filteredPlayers.length} of {players.length} players
               </p>
 
-            </div>
+            </div> */}
+
+            {/* {!isLoading && !fetchError && (
+              <div>
+
+              </div>
+            )} */}
 
             {viewMode === "cards" ? (
               <PlayerGrid 

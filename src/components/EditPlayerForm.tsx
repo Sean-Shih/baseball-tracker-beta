@@ -137,13 +137,13 @@ export default function EditPlayerForm({
             </div>
 
             <div className="mb-3">
-                <label htmlFor="edit-battingAvg">Add Batting Average</label>
+                <label htmlFor="edit-battingAvg">Batting Average</label>
                 <input
                     id="edit-battingAvg"
                     value={battingAvg}
                     className="block w-full rounded border p-2"
                     onChange={(event) => setBattingAvg(event.target.value)}
-                    placeholder="Enter Batting Average"
+                    placeholder="Enter Batting Avg (Ex: .000)"
                     type="number"
                     min={0}
                     max={1}
