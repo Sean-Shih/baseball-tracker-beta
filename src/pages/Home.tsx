@@ -237,45 +237,6 @@ function Home() {
           
         ) : (
           <div>
-            {/* <div className="mb-4 flex gap-2 mx-6">
-              <button
-                onClick={() => setViewMode("cards")}
-                className={`rounded-lg px-4 py-2 ${viewMode === "cards" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
-              >
-                Card View
-              </button>
-              <button
-                onClick={() => setViewMode("table")}
-                className={`rounded-lg px-4 py-2 ${viewMode === "table" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
-              >
-                Table View
-              </button>
-
-              <PlayerFilters
-                teams={teams}
-                positions={positions}
-                selectedTeam={selectedTeam}
-                selectedPosition={selectedPosition}
-                onTeamChange={setSelectedTeam}
-                onPositionChange={setSelectedPosition}
-                onReset={() => {
-                    setSearchTerm("");
-                    setSelectedTeam("All");
-                    setSelectedPosition("All");
-                }}
-              />
-
-              <p className="mb-4 text-sm text-gray-500 mx-6">
-                Showing {filteredPlayers.length} of {players.length} players
-              </p>
-
-            </div> */}
-
-            {/* {!isLoading && !fetchError && (
-              <div>
-
-              </div>
-            )} */}
 
             {viewMode === "cards" ? (
               <PlayerGrid 

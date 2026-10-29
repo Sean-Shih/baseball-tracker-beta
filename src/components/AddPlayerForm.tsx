@@ -91,6 +91,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="name"
                     value={name}
+                    aria-label="Add player"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setName(event.target.value)}
                     placeholder="Enter Player Name"
@@ -102,6 +103,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input 
                     id="team"
                     value={team}
+                    aria-label="Add team"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setTeam(event.target.value)}
                     placeholder="Enter Team"
@@ -113,6 +115,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <select
                     id="position"
                     value={position}
+                    aria-label="Add position"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setPosition(event.target.value)}
                 >
@@ -133,6 +136,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="battingAvg"
                     value={battingAvg}
+                    aria-label="Add Batting Average"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setBattingAvg(event.target.value)}
                     placeholder="Enter Batting Average"
@@ -147,6 +151,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="era"
                     value={era}
+                    aria-label="Add ERA"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setEra(event.target.value)}
                     placeholder="Enter ERA"
@@ -157,6 +162,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
             </div>
             <button 
                 type="submit" 
+                aria-label="Adding player"
                 className="w-full rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-700 transition duration-150 ease-in-out"
                 disabled={isSubmitting}
             >
