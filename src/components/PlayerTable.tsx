@@ -103,8 +103,9 @@ export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
     // sortedArray = players.sort();
 
     return (
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200">
-            <table className="w-full min-w-212.5 text-left text-sm ">
+        <div className="w-full overflow-x-auto rounded-xl border-gray-200 px-8 py-3">
+            <table className="w-full min-w-[640px] text-left text-sm "> 
+                {/* min-w-212.5 min */}
                 <thead className="bg-gray-100 text-gray-700">
                     <tr>
                         <th className="px-4 py-3">

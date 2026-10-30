@@ -11,7 +11,7 @@ export default function PlayerGrid( {players, onEdit, onDelete }: PlayerGridProp
 
     return (
         <div id='playerCards' 
-        className='w-fit mx-auto grid grid-cols-2 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-30 mt-10 mb-5'>
+        className='w-fit grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4 justify-items-center justify-center gap-y-15 gap-x-16.5 mt-10 mb-5 mx-auto'>
             {/* {players.map((player) => (
                 <PlayerCard 
                     key={player.id}

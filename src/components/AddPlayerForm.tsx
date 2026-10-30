@@ -87,9 +87,11 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 </p>
             )}
             <div className="mb-5">
-                <label htmlFor="name" className="block mb-2.5 text-sm font-medium text-heading">Add Player</label>
+                <label htmlFor="player-name" className="block mb-2.5 text-sm font-medium text-heading">Add Player</label>
                 <input
-                    id="name"
+                    id="player-name"
+                    name="name"
+                    type="text"
                     value={name}
                     aria-label="Add player"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
