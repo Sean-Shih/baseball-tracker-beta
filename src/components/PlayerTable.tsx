@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Player } from "../types/player";
+import { formatBattingStat, formatEra, formatOps } from "../utils/formatStats";
 
 interface PlayerTableProps {
     players: Player[];
@@ -13,6 +14,9 @@ type SortKey =
     | "team"
     | "position"
     | "battingAvg"
+    | "obp"
+    | "slugging"
+    | "ops"
     | "era";
 
 type SortDirection = "asc" | "desc";
@@ -31,37 +35,20 @@ function getSortValue(
         case "position":
             return player.position;
 
-        case "battingAvg": {
-            if (player.position === "P") {
-                return null;
-            }
+        case "battingAvg": 
+            return player.battingAvg ?? null;      
 
-            const value = player.battingAvg;
+        case "obp":
+            return player.obp ?? null;
 
-            if (value == null || value.trim() === "") {
-                return null;
-            }
+        case "slugging":
+            return player.slugging ?? null;
 
-            const number = Number(value);
+        case "ops":
+            return player.ops ?? null;
 
-            return Number.isFinite(number) ? number : null;
-        }
-
-        case "era": {
-            if (player.position !== "P") {
-                return null;
-            }
-
-            const value = player.era;
-
-            if (value == null || value.trim() === "") {
-                return null;
-            }
-
-            const number = Number(value);
-
-            return Number.isFinite(number) ? number : null;
-        }
+        case "era": 
+            return player.era ?? null;
     }
 }
 
@@ -104,7 +91,7 @@ export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
 
     return (
         <div className="w-full overflow-x-auto rounded-xl border-gray-200 px-8 py-3">
-            <table className="w-full min-w-[640px] text-left text-sm "> 
+            <table className="w-full min-w-[1000px] text-left text-sm "> 
                 {/* min-w-212.5 min */}
                 <thead className="bg-gray-100 text-gray-700">
                     <tr>
@@ -158,6 +145,42 @@ export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
                         </th>
                         <th className="px-4 py-3">
                             <button
+                                onClick={() => handleSort("obp")}
+                                className="font-semibold hover:text-blue-700"
+                                aria-sort={
+                                    sortKey === "obp" ? sortDirection === "asc" ? "ascending" : "descending" : "none"
+                                }
+                            >
+                                On-Base Percentage
+                                {sortKey === "obp" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                            </button>
+                        </th>
+                        <th className="px-4 py-3">
+                            <button
+                                onClick={() => handleSort("slugging")}
+                                className="font-semibold hover:text-blue-700"
+                                aria-sort={
+                                    sortKey === "slugging" ? sortDirection === "asc" ? "ascending" : "descending" : "none"
+                                }
+                            >
+                                Slugging
+                                {sortKey === "slugging" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                            </button>
+                        </th>
+                        <th className="px-4 py-3">
+                            <button
+                                onClick={() => handleSort("ops")}
+                                className="font-semibold hover:text-blue-700"
+                                aria-sort={
+                                    sortKey === "ops" ? sortDirection === "asc" ? "ascending" : "descending" : "none"
+                                }
+                            >
+                                OPS
+                                {sortKey === "ops" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                            </button>
+                        </th>
+                        <th className="px-4 py-3">
+                            <button
                                 onClick={() => handleSort("era")}
                                 className="font-semibold hover:text-blue-700"
                                 aria-sort={
@@ -196,11 +219,28 @@ export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
                             </td>
 
                             <td className="px-4 py-3">
-                                {player.position === "P" ? "-" : player.battingAvg || "-"}
+                                {/* {player.position === "P" ? "-" : player.battingAvg || "-"} */}
+                                {formatBattingStat(player.battingAvg)}
                             </td>
 
                             <td className="px-4 py-3">
-                                {player.position === "P" ? "-" : player.era || "-"}
+                                {/* {player.position === "P" ? "-" : player.era || "-"} */}
+                                {formatBattingStat(player.obp)}
+                            </td>
+
+                            <td className="px-4 py-3">
+                                {/* {player.position === "P" ? "-" : player.era || "-"} */}
+                                {formatBattingStat(player.slugging)}
+                            </td>
+
+                            <td className="px-4 py-3">
+                                {/* {player.position === "P" ? "-" : player.era || "-"} */}
+                                {formatOps(player.ops)}
+                            </td>
+
+                            <td className="px-4 py-3">
+                                {/* {player.position === "P" ? "-" : player.era || "-"} */}
+                                {formatEra(player.era)}
                             </td>
 
                             <td className="px-4 py-3">

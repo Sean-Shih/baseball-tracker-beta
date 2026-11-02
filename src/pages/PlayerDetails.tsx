@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import StatCard from "../components/StatCard";
 import { useEffect, useState } from "react";
 import type { Player } from "../types/player";
+import { formatBattingStat, formatEra, formatOps } from "../utils/formatStats";
 // interface PlayerDetailsProps {
 //     player: Player;
 // }
@@ -123,10 +124,40 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                         label="Position"
                         value={player.position}
                     />
-                    <StatCard 
-                        label={player.position === "P" ? "ERA" : "Slashline"}
+                    {/* <StatCard 
+                        label={player.position === "P" ? "ERA" : "Average"}
                         value={
                             player.position === "P" ? player.era ?? "N/A" : player.battingAvg ?? "N/A"
+                        }
+                    /> */}
+                    <StatCard 
+                        label="Batting Average"
+                        value={
+                            formatBattingStat(player.battingAvg)
+                        }
+                    />
+                    <StatCard 
+                        label="On-Base Percentage"
+                        value={
+                            formatBattingStat(player.obp)
+                        }
+                    />
+                    <StatCard 
+                        label="Slugging Percentage"
+                        value={
+                            formatBattingStat(player.slugging)
+                        }
+                    />
+                    <StatCard 
+                        label="OPS"
+                        value={
+                            formatOps(player.ops)
+                        }
+                    />
+                    <StatCard 
+                        label="ERA"
+                        value={
+                            formatEra(player.era)
                         }
                     />
                 </div>

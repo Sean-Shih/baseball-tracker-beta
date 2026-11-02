@@ -275,13 +275,13 @@ function Home() {
               />
             )}
 
-            <AnalyticsSummary players={players}/>
+            {/* <AnalyticsSummary players={players}/> */}
 
-            <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
+            {/* <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
               <BattingAverageChart players={players} />
 
               <EraChart players={players} />
-            </div>
+            </div> */}
           </div>
         )}
       <AddPlayerForm onPlayerAdded={handlePlayerAdded}/>

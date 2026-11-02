@@ -11,7 +11,11 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
     const [team, setTeam] = useState("")
     const [position, setPosition] = useState("")
     const [battingAvg, setBattingAvg] = useState("")
+    const [obp, setObp] = useState("");
+    const [slugging, setSlugging] = useState("");
     const [era, setEra] = useState("")
+
+
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -26,8 +30,10 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
             name, 
             team,
             position,
-            battingAvg,
-            era: era ? era : null
+            battingAvg: battingAvg.trim() === "" ? null : Number(battingAvg),
+            obp: obp.trim() === "" ? null : Number(obp),
+            slugging: slugging.trim() === "" ? null : Number(slugging),
+            era: era.trim() === "" ? null : Number(era)
         };
 
         fetch("http://localhost:8080/api/players", {
@@ -60,6 +66,8 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
             setTeam("");
             setPosition("");
             setBattingAvg("");
+            setObp("");
+            setSlugging("");
             setEra("");
 
         }).catch((error) => {
@@ -142,6 +150,36 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setBattingAvg(event.target.value)}
                     placeholder="Enter Batting Average"
+                    type="number"
+                    min={0}
+                    max={1}
+                    step={0.001}
+                />
+            </div>
+            <div className="mb-5">
+                <label htmlFor="obp" className="block mb-2.5 text-sm font-medium text-heading">Add On-Base Percentage</label>
+                <input
+                    id="obp"
+                    value={obp}
+                    aria-label="Add On-Base Percentage"
+                    className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
+                    onChange={(event) => setObp(event.target.value)}
+                    placeholder="Enter On-Base Percentage"
+                    type="number"
+                    min={0}
+                    max={1}
+                    step={0.001}
+                />
+            </div>
+            <div className="mb-5">
+                <label htmlFor="slugging" className="block mb-2.5 text-sm font-medium text-heading">Add Slugging Percentage</label>
+                <input
+                    id="slugging"
+                    value={slugging}
+                    aria-label="Add Slugging Percentage"
+                    className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
+                    onChange={(event) => setSlugging(event.target.value)}
+                    placeholder="Enter Slugging Percentage"
                     type="number"
                     min={0}
                     max={1}

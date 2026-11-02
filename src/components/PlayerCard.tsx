@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Player } from "../types/player";
 import { Link } from "react-router-dom";
+import { formatBattingStat, formatEra, formatOps } from "../utils/formatStats";
 import Button from "../ui/Button";
 
 interface PlayerCardProps {
@@ -35,6 +36,8 @@ interface PlayerCardProps {
         };
     }, [menuOpen]);
 
+    // const ops = player.obp != null && player.slugging != null ? player.obp + player.slugging : null;
+
     return (
         <div className="relative w-full max-w-72 min-w-0 transition rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
             <Link to={`player/${player.id}`}>
@@ -44,14 +47,14 @@ interface PlayerCardProps {
                         <span className='text-gray-500 mr-3 uppercase text-xs'>{player.team}</span>
                         <p className='text-lg font-bold text-black truncate block capitalize'>{player.name}</p>
                         <div className='flex items-center'>
-                            <p className="flex text-right text-base text-gray-400 justify-end-safe"> 
+                            <p className="flex text-right text-gray-400 justify-end-safe text-base"> 
                                 {player.position}
                             </p>
                         </div>
                         <div>
-                            {player.position === "P" ? 
+                            {/* {player.position === "P" ? 
                                 <h2 className="flex text-base text-gray-800 font-semibold">
-                                    ERA
+                                    ERA: {formatEra(player.era)}
                                 </h2>
                              : 
                                 <h2 className="flex text-base text-gray-800 font-semibold pt-6">
@@ -60,7 +63,18 @@ interface PlayerCardProps {
                             } 
                             <h1 className='flex text-base text-gray-400'>
                                 {player.position === "P" ? player.era ?? "N/A" : player.battingAvg ?? "N/A"}
-                            </h1>
+                            </h1> */}
+                            {player.position === "P" ? (
+                                <h1 className="flex text-gray-900 text-2xl font-semibold">{formatEra(player.era)}</h1>
+                            ) : (
+                                <div className="flex text-gray-900 text-2xl font-semibold">
+                                    {/* <p>Batting Average: {formatBattingStat(player.battingAvg)}</p>
+                                    <p>On-Base Percentage: {formatBattingStat(player.obp)}</p>
+                                    <p>Slugging Percentage: {formatBattingStat(player.slugging)}</p>
+                                    <p>OPS: {formatOps(player.ops)}</p> */}
+                                    <p>{formatBattingStat(player.battingAvg)}/{formatBattingStat(player.obp)}/{formatBattingStat(player.slugging)}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

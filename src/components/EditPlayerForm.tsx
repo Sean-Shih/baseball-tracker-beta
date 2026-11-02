@@ -21,6 +21,8 @@ export default function EditPlayerForm({
     const [team, setTeam] = useState(player.team);
     const [position, setPosition] = useState(player.position);
     const [battingAvg, setBattingAvg] = useState(player.battingAvg ?? "");
+    const [obp, setObp] = useState(player.obp ?? "");
+    const [slugging, setSlugging] = useState(player.slugging ?? "");
     const [era, setEra] = useState(player.era ?? "");
 
     const [successMessage, setSuccessMessage] = useState("");
@@ -38,7 +40,9 @@ export default function EditPlayerForm({
             name,
             team,
             position,
-            battingAvg,
+            battingAvg: battingAvg || null,
+            obp: obp || null,
+            slugging: slugging || null,
             era: era || null
         };
 
@@ -151,6 +155,36 @@ export default function EditPlayerForm({
                 />
             </div>
 
+            <div className="mb-3">
+                <label htmlFor="edit-obp">On-Base Percentage</label>
+                <input
+                    id="edit-obp"
+                    value={obp}
+                    className="block w-full rounded border p-2"
+                    onChange={(event) => setObp(event.target.value)}
+                    placeholder="Enter On-Base % (Ex: .000)"
+                    type="number"
+                    min={0}
+                    max={1}
+                    step={0.001}
+                />
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="edit-slugging">Slugging Percentage</label>
+                <input
+                    id="edit-slugging"
+                    value={slugging}
+                    className="block w-full rounded border p-2"
+                    onChange={(event) => setSlugging(event.target.value)}
+                    placeholder="Enter Slugging % (Ex: .000)"
+                    type="number"
+                    min={0}
+                    max={1}
+                    step={0.001}
+                />
+            </div>
+
             <div className="mb-4">
                 <label htmlFor="edit-era">ERA</label>
                 <input
@@ -159,6 +193,7 @@ export default function EditPlayerForm({
                     min="0"
                     step="0.01"
                     className="block w-full rounded border p-2"
+                    placeholder="Enter ERA (Ex: 0.00)"
                     value={era}
                     onChange={(event) => setEra(event.target.value)}
                 />
