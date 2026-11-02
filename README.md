@@ -1,32 +1,79 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# Baseball Analytics Dashboard
 
-Currently, two official plugins are available:
+A full-stack web application for tracking and managing MLB players
+and their statistics.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Built with React, TypeScript, Spring Boot, and PostgreSQL.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- View a list of MLB players.
+- Search and filter players.
+- Sort players by name, team, position, and statistics.
+- View individual player details.
+- Add new players.
+- Edit existing player information.
+- Delete players.
+- Track batting statistics including AVG, OBP, SLG, and OPS.
+- Track pitching statistics including ERA.
+- Handle missing or unavailable statistics.
+- Persist player information using PostgreSQL.
 
-## Expanding the Oxlint configuration
+## Technologies
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Frontend
+- React
+- TypeScript
+- Vite
+- React Router
+- Vitest
+- React Testing Library
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+### Backend
+- Java
+- Spring Boot
+- Spring Data JPA
+- Spring Validation
+- Maven
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### Database
+- PostgreSQL
+
+### Testing
+- JUnit
+- Mockito
+- MockMvc
+- Vitest
+- React Testing Library
+
+
+## Getting Started
+
+### Prerequisites
+
+- Java 21
+- Node.js
+- PostgreSQL
+- npm
+
+### 1. Clone the repository
+
+git clone <your-repository-url>
+
+### 2. Set up PostgreSQL
+
+Create a database named baseball_db.
+
+Configure your database environment variables.
+
+### 3. Start the backend
+
+cd backend
+./mvnw spring-boot:run
+
+### 4. Start the frontend
+
+cd frontend
+npm install
+npm run dev
