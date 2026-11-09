@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import PlayerGrid from "../components/PlayerGrid";
 import type { Player } from "../types/player";
@@ -7,17 +7,18 @@ import EditPlayerForm from "../components/EditPlayerForm";
 import PlayerTable from "../components/PlayerTable";
 import PlayerFilters from "../components/PlayerFilters";
 
-import BattingAverageChart from "../components/BattingAverageChart";
+import OffensiveStatsChart from "../components/OffensiveStatsChart";
 import EraChart from "../components/EraChart";
-
 import AnalyticsSummary from "../components/AnalyticsSummary";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function Home() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -36,47 +37,12 @@ function Home() {
       "All",
       ...new Set(players.map((player) => player.position)),
   ];
-
-  const totalPlayers = players.length;
-
-  const totalPitchers = players.filter(
-    (player) => player.position === "P"
-  ).length;
-
-  const totalPositionPlayers = totalPlayers - totalPitchers;
-
-  // const fetchPlayers = async () => {
-
-  //   setIsLoading(true);
-  //   setFetchError("");
-
-  //   try {
-  //     const response = await fetch(
-  //       "http://localhost:8080/api/players"
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch players.")
-  //     }
-
-  //     const data: Player[] = await response.json();
-  //     setPlayers(data)
-  //   } catch (error) {
-  //     console.error("Error fetching players:", error)
-
-  //     setFetchError(
-  //       "Unable to load players. Please try again."
-  //     );
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
+  
   const fetchPlayers = () => {
     setIsLoading(true);
     setFetchError("");
 
-    fetch("http://localhost:8080/api/players")
+    fetch(`${API_BASE_URL}/api/players`)
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch players");
 
@@ -101,12 +67,6 @@ function Home() {
   useEffect(() => {
     fetchPlayers();
   }, []);
-
-  // const filteredPlayers = players.filter(
-  //   (player) =>
-  //     player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     player.team.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
 
   const filteredPlayers = players.filter((player) => {
     const query = searchTerm.trim().toLowerCase();
@@ -138,7 +98,7 @@ function Home() {
     setIsDeleting(true);
     setDeleteError("");
 
-    fetch(`http://localhost:8080/api/players/${player.id}`, {
+    fetch(`${API_BASE_URL}/api/players/${player.id}`, {
       method: "DELETE"
     }).then((response) => {
       if (!response.ok) {
@@ -170,7 +130,7 @@ function Home() {
 
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SearchBar onSearch={setSearchTerm} />
+        <SearchBar searchTerm={searchTerm} onSearch={setSearchTerm} />
         
         {editingPlayer && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blend-darken backdrop-contrast-50">
@@ -275,13 +235,12 @@ function Home() {
               />
             )}
 
-            {/* <AnalyticsSummary players={players}/> */}
-
-            {/* <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
-              <BattingAverageChart players={players} />
-
+            <div className="my-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <OffensiveStatsChart players={players} />
               <EraChart players={players} />
-            </div> */}
+            </div>
+
+            <AnalyticsSummary players={players} />
           </div>
         )}
       <AddPlayerForm onPlayerAdded={handlePlayerAdded}/>

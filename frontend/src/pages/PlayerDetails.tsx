@@ -3,9 +3,8 @@ import StatCard from "../components/StatCard";
 import { useEffect, useState } from "react";
 import type { Player } from "../types/player";
 import { formatBattingStat, formatEra, formatOps } from "../utils/formatStats";
-// interface PlayerDetailsProps {
-//     player: Player;
-// }
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function PlayerDetails() { // { player }: PlayerDetailsProps
 
@@ -16,7 +15,7 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/players/${id}`)
+        fetch(`${API_BASE_URL}/api/players/${id}`)
             .then((response) => {
                 if (response.status === 404) {
                     setPlayer(null);
@@ -94,24 +93,6 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                 </div>
             </div>
             <div className="max-w-5xl mx-auto mt-8">
-                {/* <h2 className="text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
-                <div className="grid gird-cols-1 md:grid-cols-3 gap-4">
-                    <p className="bg-white rounded-xl shadow-sm p-6">Team</p>
-                    <p className="text-lg font-semibold mt-1">{player.team}</p>
-                </div>
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                    <p className="text-sm text-gray-500">Position</p>
-                    <p className="text-lg font-semibold mt-1">
-                    {player.position}
-                    </p>
-                </div>
-
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                    <p className="text-sm text-gray-500">Player ID</p>
-                    <p className="text-lg font-semibold mt-1">
-                    {player.id}
-                    </p>
-                </div> */}
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
                     Statistics
                 </h2>
@@ -124,12 +105,6 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
                         label="Position"
                         value={player.position}
                     />
-                    {/* <StatCard 
-                        label={player.position === "P" ? "ERA" : "Average"}
-                        value={
-                            player.position === "P" ? player.era ?? "N/A" : player.battingAvg ?? "N/A"
-                        }
-                    /> */}
                     <StatCard 
                         label="Batting Average"
                         value={
@@ -164,12 +139,4 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
             </div>
         </div>
     );
-
-    // return (
-    //     <div>
-    //         <h1>{player.name}</h1>
-    //         <p>{player.team}</p>
-    //         <p>{player.position}</p>
-    //     </div>
-    // );
 }

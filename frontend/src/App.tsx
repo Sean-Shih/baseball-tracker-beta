@@ -2,7 +2,6 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PlayerDetails from "./pages/PlayerDetails";
 import Home from './pages/Home';
-import AddPlayerForm from './components/AddPlayerForm';
 
 
 function App() {
