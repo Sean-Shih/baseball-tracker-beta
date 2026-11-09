@@ -6,7 +6,11 @@ export const players: Player[] = [
         name: "Paul Skenes",
         team: "Pittsburgh Pirates",
         position: "P",
+        battingAvg: null,
+        obp: null,
+        slugging: null,
         era: 3.78,
+        ops: null
     },
     {
         id: 2,
@@ -16,6 +20,8 @@ export const players: Player[] = [
         battingAvg: .281,
         obp: .375,
         slugging: .950,
+        era: 1.79,
+        ops: .899
     },
     {
         id: 3,
@@ -25,13 +31,18 @@ export const players: Player[] = [
         battingAvg: .282,
         obp: .320,
         slugging: .811,
+        era: null
     },
     {
         id: 4,
         name: "Logan Gilbert",
         team: "Seattle Mariners",
         position: "P",
+        battingAvg: null,
+        obp: null,
+        slugging: null,
         era: 3.69,
+        ops: null
     },
     {
         id: 5,
@@ -41,5 +52,6 @@ export const players: Player[] = [
         battingAvg: .235,
         obp: .464,
         slugging: .774,
+        era: null,
     }
 ]

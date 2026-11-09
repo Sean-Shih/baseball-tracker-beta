@@ -52,7 +52,7 @@ function getSortValue(
     }
 }
 
-export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
+export default function PlayerTable( { players, onEdit, onDelete }: PlayerTableProps ) {
 
 
     const [sortKey, setSortKey] = useState<SortKey>("name");
@@ -176,7 +176,9 @@ export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
                                 }
                             >
                                 OPS
-                                {sortKey === "ops" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                                <span aria-hidden="true">
+                                    {sortKey === "ops" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                                </span>
                             </button>
                         </th>
                         <th className="px-4 py-3">
@@ -188,7 +190,9 @@ export default function ( { players, onEdit, onDelete }: PlayerTableProps ) {
                                 }
                             >
                                 ERA
-                                {sortKey === "era" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                                <span aria-hidden="true">
+                                    {sortKey === "era" ? sortDirection === "asc" ? "ꜛ" : "ꜜ" : " ↕"}
+                                </span>
                             </button>
                         </th>
                         <th className="px-7 py-3 text-left justify-left">Actions</th>

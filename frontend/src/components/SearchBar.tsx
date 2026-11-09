@@ -1,9 +1,10 @@
 
 interface SearchBarProps {
+    searchTerm: string;
     onSearch: (searchTerm: string) => void;
 }
 
-export default function SearchBar({onSearch}: SearchBarProps) {
+export default function SearchBar({ searchTerm, onSearch }: SearchBarProps) {
 
     return (
         <div className="flex items-center border pl-4 gap-2 border-gray-500/30 h-11.5 rounded-full overflow-hidden max-w-md w-full mx-auto mb-8">
@@ -14,6 +15,7 @@ export default function SearchBar({onSearch}: SearchBarProps) {
                 aria-label="Search players"
                 type="text"
                 placeholder="Search"
+                value={searchTerm}
                 onChange={(event) => onSearch(event.target.value)}
             />
         </div>

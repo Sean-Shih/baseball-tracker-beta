@@ -2,14 +2,14 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import type { Player } from "../types/player";
 import type { ApiErrorResponse } from "../types/player";
-// import { eventLoopUtilization } from "perf_hooks";
-// import { PrefetchPageLinks } from "react-router-dom";
 
 interface EditPlayerFormProps {
     player: Player;
     onPlayerUpdated: () => void;
     onCancel: () => void;
 }
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function EditPlayerForm({
     player,
@@ -20,10 +20,11 @@ export default function EditPlayerForm({
     const [name, setName] = useState(player.name);
     const [team, setTeam] = useState(player.team);
     const [position, setPosition] = useState(player.position);
-    const [battingAvg, setBattingAvg] = useState(player.battingAvg ?? "");
-    const [obp, setObp] = useState(player.obp ?? "");
-    const [slugging, setSlugging] = useState(player.slugging ?? "");
-    const [era, setEra] = useState(player.era ?? "");
+
+    const [battingAvg, setBattingAvg] = useState(player.battingAvg?.toString() ?? "");
+    const [obp, setObp] = useState(player.obp?.toString() ?? "");
+    const [slugging, setSlugging] = useState(player.slugging?.toString() ?? "");
+    const [era, setEra] = useState(player.era?.toString() ?? "");
 
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -40,13 +41,13 @@ export default function EditPlayerForm({
             name,
             team,
             position,
-            battingAvg: battingAvg || null,
-            obp: obp || null,
-            slugging: slugging || null,
-            era: era || null
+            battingAvg: battingAvg.trim() === "" ? null : Number(battingAvg),
+            obp: obp.trim() === "" ? null : Number(obp),
+            slugging: slugging.trim() === "" ? null : Number(slugging),
+            era: era.trim() === "" ? null : Number(era)
         };
 
-        fetch(`http://localhost:8080/api/players/${player.id}`, {
+        fetch(`${API_BASE_URL}/api/players/${player.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -89,11 +90,11 @@ export default function EditPlayerForm({
             <h2 className="mb-4 text-xl font-bold">Edit Player</h2>
 
             {successMessage && (
-                <p className="mb-3 text-green-600">{successMessage}</p>
+                <p className="mb-3 text-green-600" role="status">{successMessage}</p>
             )}
 
             {errorMessage && (
-                <p className="mb-3 text-red-600">{errorMessage}</p>
+                <p className="mb-3 text-red-600" role="alert">{errorMessage}</p>
             )}
 
             <div className="mb-3">
@@ -119,7 +120,7 @@ export default function EditPlayerForm({
             </div>
 
             <div className="mb-3">
-                <label htmlFor="position">Add Position</label>
+                <label htmlFor="edit-position">Add Position</label>
                 <select
                     id="edit-position"
                     value={position}

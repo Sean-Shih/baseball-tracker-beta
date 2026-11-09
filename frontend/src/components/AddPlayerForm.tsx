@@ -5,6 +5,8 @@ type AddPlayerFormProps = {
     onPlayerAdded: () => void;
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
 
     const [name, setName] = useState("")
@@ -36,7 +38,8 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
             era: era.trim() === "" ? null : Number(era)
         };
 
-        fetch("http://localhost:8080/api/players", {
+        
+        fetch(`${API_BASE_URL}/api/players`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -101,7 +104,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                     name="name"
                     type="text"
                     value={name}
-                    aria-label="Add player"
+                    // aria-label="Add player"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setName(event.target.value)}
                     placeholder="Enter Player Name"
@@ -113,7 +116,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input 
                     id="team"
                     value={team}
-                    aria-label="Add team"
+                    // aria-label="Add team"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setTeam(event.target.value)}
                     placeholder="Enter Team"
@@ -125,7 +128,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <select
                     id="position"
                     value={position}
-                    aria-label="Add position"
+                    // aria-label="Add position"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setPosition(event.target.value)}
                 >
@@ -146,7 +149,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="battingAvg"
                     value={battingAvg}
-                    aria-label="Add Batting Average"
+                    // aria-label="Add Batting Average"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setBattingAvg(event.target.value)}
                     placeholder="Enter Batting Average"
@@ -161,7 +164,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="obp"
                     value={obp}
-                    aria-label="Add On-Base Percentage"
+                    // aria-label="Add On-Base Percentage"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setObp(event.target.value)}
                     placeholder="Enter On-Base Percentage"
@@ -176,7 +179,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="slugging"
                     value={slugging}
-                    aria-label="Add Slugging Percentage"
+                    // aria-label="Add Slugging Percentage"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setSlugging(event.target.value)}
                     placeholder="Enter Slugging Percentage"
@@ -191,7 +194,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                 <input
                     id="era"
                     value={era}
-                    aria-label="Add ERA"
+                    // aria-label="Add ERA"
                     className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body rounded-xl"
                     onChange={(event) => setEra(event.target.value)}
                     placeholder="Enter ERA"
@@ -202,7 +205,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
             </div>
             <button 
                 type="submit" 
-                aria-label="Adding player"
+                // aria-label="Adding player"
                 className="w-full rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-700 transition duration-150 ease-in-out"
                 disabled={isSubmitting}
             >

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import PlayerFilters from "../components/PlayerFilters";
+import PlayerFilters from "./PlayerFilters";
 
 describe("PlayerFilters", () => {
     it("displays team and position options", () => {
@@ -89,7 +89,7 @@ describe("PlayerFilters", () => {
             />
         );
 
-        await user.click(screen.getByRole("button", { name: /clear filters/i }));
+        await user.click(screen.getByRole("button", { name: /reset filters/i }));
 
         expect(onReset).toHaveBeenCalledTimes(1);
     });

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Player } from "../types/player";
 import { Link } from "react-router-dom";
-import { formatBattingStat, formatEra, formatOps } from "../utils/formatStats";
+import { formatBattingStat, formatEra } from "../utils/formatStats";
 import Button from "../ui/Button";
 
 interface PlayerCardProps {
@@ -43,7 +43,7 @@ interface PlayerCardProps {
             <Link to={`player/${player.id}`}>
                 <div className='w-full max-w-72 bg-white shadow-md rounded-2xl'>
                     <img src='src/assets/player_placeholder.jpg' alt='Player Name (placeholder)' className='h-80 w-72 object-cover rounded-t-xl'></img>
-                    <div className='px-4 py-3 w-72 aspect-[4/3]'>
+                    <div className='px-4 py-3 w-72'>
                         <span className='text-gray-500 mr-3 uppercase text-xs'>{player.team}</span>
                         <p className='text-lg font-bold text-black truncate block capitalize'>{player.name}</p>
                         <div className='flex items-center'>
@@ -73,6 +73,7 @@ interface PlayerCardProps {
                                     <p>Slugging Percentage: {formatBattingStat(player.slugging)}</p>
                                     <p>OPS: {formatOps(player.ops)}</p> */}
                                     <p>{formatBattingStat(player.battingAvg)}/{formatBattingStat(player.obp)}/{formatBattingStat(player.slugging)}</p>
+                                    {/* <p>{formatOps(player.ops)}</p> */}
                                 </div>
                             )}
                         </div>

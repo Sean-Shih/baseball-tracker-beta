@@ -71,7 +71,7 @@ export default function PlayerFilters({
                 onClick={onReset}
                 className="rounded-lg border px-4 py-2 hover:bg-gray-100"
             >
-                Clear filters
+                Reset filters
             </button>
         </div>
     );
