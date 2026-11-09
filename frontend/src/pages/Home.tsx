@@ -52,7 +52,7 @@ function Home() {
         setPlayers(data);
       })
       .catch((error) =>  {
-        console.error("Error fetching players:", error);
+        console .error("Error fetching players:", error);
         setFetchError("Unable to load players, please try again.");
       })
       .finally(() => {
