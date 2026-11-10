@@ -1,15 +1,13 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import type { Player } from "../types/player";
-import type { ApiErrorResponse } from "../types/player";
+import { updatePlayer } from "../services/playerService";
 
 interface EditPlayerFormProps {
     player: Player;
     onPlayerUpdated: () => void;
     onCancel: () => void;
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function EditPlayerForm({
     player,
@@ -47,39 +45,24 @@ export default function EditPlayerForm({
             era: era.trim() === "" ? null : Number(era)
         };
 
-        fetch(`${API_BASE_URL}/api/players/${player.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(playerData)
-        }).then( async (response) =>  {
-            if (!response.ok) {
-                const errorData: ApiErrorResponse = await response.json();
+        updatePlayer(player.id, playerData)
+            .then((editedPlayer) => {
+                console.log("Player updated successfully:", editedPlayer);
 
-                const errorMessage = errorData.errors ? Object.values(errorData.errors).join(" ")
-                    : errorData.message;
+                setSuccessMessage("Player updated successfully!");
+                setErrorMessage("");
                 
-                throw new Error(errorMessage || "Failed to edit player")
-            }
+                onPlayerUpdated();
+            })
+            .catch((error) => {
+                console.log("Error updating player:", error)
 
-            return response.json();
-        }).then((editedPlayer) => {
-            console.log("Player updated successfully:", editedPlayer);
-
-            setSuccessMessage("Player updated successfully!");
-            setErrorMessage("");
-            
-            onPlayerUpdated();
-
-        }).catch((error) => {
-            console.log("Error updating player:", error)
-
-            // setIsSubmitting(false);
-            setErrorMessage(error instanceof Error ? error.message : "An unexpected error occured");
-        }).finally(()=> {
-            setIsSubmitting(false);
-        });
+                // setIsSubmitting(false);
+                setErrorMessage(error instanceof Error ? error.message : "An unexpected error occured"); 
+            })
+            .finally(()=> {
+                setIsSubmitting(false);
+            });          
     };
 
     return (

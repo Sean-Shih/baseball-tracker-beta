@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import type { ApiErrorResponse } from "../types/player";
+import { createPlayer } from "../services/playerService";
 
 type AddPlayerFormProps = {
     onPlayerAdded: () => void;
 };
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
 
@@ -39,24 +37,28 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
         };
 
         
-        fetch(`${API_BASE_URL}/api/players`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(playerData)
-        }).then( async (response) =>  {
-            if (!response.ok) {
-                const errorData: ApiErrorResponse = await response.json();
+        createPlayer(playerData)
+            .then((savedPlayer) => {
 
-                const errorMessage = errorData.errors ? Object.values(errorData.errors).join(" ")
-                    : errorData.message;
+        //     })
+        // fetch(`${API_BASE_URL}/api/players`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify(playerData)
+        // }).then( async (response) =>  {
+        //     if (!response.ok) {
+        //         const errorData: ApiErrorResponse = await response.json();
 
-                throw new Error(errorMessage || "Failed to add player.");
-            }
+        //         const errorMessage = errorData.errors ? Object.values(errorData.errors).join(" ")
+        //             : errorData.message;
 
-            return response.json();
-        }).then((savedPlayer) => {
+        //         throw new Error(errorMessage || "Failed to add player.");
+        //     }
+
+        //     return response.json();
+        // }).then((savedPlayer) => {
             console.log("Player added successfully:", savedPlayer);
 
             // setIsSubmitting(false)
