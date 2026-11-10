@@ -6,12 +6,11 @@ import AddPlayerForm from "../components/AddPlayerForm";
 import EditPlayerForm from "../components/EditPlayerForm";
 import PlayerTable from "../components/PlayerTable";
 import PlayerFilters from "../components/PlayerFilters";
+import { deletePlayer, getPlayers } from "../services/playerService";
 
 import OffensiveStatsChart from "../components/OffensiveStatsChart";
 import EraChart from "../components/EraChart";
 import AnalyticsSummary from "../components/AnalyticsSummary";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function Home() {
 
@@ -42,22 +41,17 @@ function Home() {
     setIsLoading(true);
     setFetchError("");
 
-    fetch(`${API_BASE_URL}/api/players`)
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to fetch players");
-
-        return response.json();
+    getPlayers()
+      .then((data) => {
+        setPlayers(data)
       })
-      .then((data: Player[]) => {
-        setPlayers(data);
-      })
-      .catch((error) =>  {
+      .catch((error) => {
         console .error("Error fetching players:", error);
         setFetchError("Unable to load players, please try again.");
       })
       .finally(() => {
         setIsLoading(false);
-      });
+      })
   };
 
   const handlePlayerAdded = () => {
@@ -98,20 +92,17 @@ function Home() {
     setIsDeleting(true);
     setDeleteError("");
 
-    fetch(`${API_BASE_URL}/api/players/${player.id}`, {
-      method: "DELETE"
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to delete player");
-      }
-
-      fetchPlayers();
-    }).catch((error) => {
-      console.error("Error deleting player:", error);
-      setDeleteError("Failed to delete player. Please try again.")
-    }).finally(() => {
-      setIsDeleting(false);
-    });
+    deletePlayer(player.id)
+      .then(() => {
+        fetchPlayers();
+      })
+      .catch((error) => {
+        console.error("Error deleting player:", error);
+        setDeleteError("Failed to delete player. Please try again.");
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
   };
 
   return (

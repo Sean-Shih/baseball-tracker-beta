@@ -3,8 +3,7 @@ import StatCard from "../components/StatCard";
 import { useEffect, useState } from "react";
 import type { Player } from "../types/player";
 import { formatBattingStat, formatEra, formatOps } from "../utils/formatStats";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { getPlayerById } from "../services/playerService";
 
 export default function PlayerDetails() { // { player }: PlayerDetailsProps
 
@@ -15,41 +14,27 @@ export default function PlayerDetails() { // { player }: PlayerDetailsProps
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/players/${id}`)
-            .then((response) => {
-                if (response.status === 404) {
-                    setPlayer(null);
-                    return null;
-                }
-
-                if (!response.ok) throw new Error("Failed to fetch player");
-
-                return response.json();
-            })
-            .then((data) =>{
-                setPlayer(data);
-            })
+        getPlayerById(Number(id))
+            .then((data) => setPlayer(data))
             .catch((error) => {
                 console.error("Error fetching player:", error);
                 setError("Unable to fetch player details. Please try again.");
             })
-            .finally(() => {
-                setLoading(false);
-            });
+            .finally(() => setLoading(false));
     }, [id]);
 
     if (loading) return <p>Loading Player...</p>
 
     if (error) return <p>Error: {error}</p>
 
-    if (!player) return <p>Player not found</p>
+    // if (!player) return <p>Player not found</p>
 
     // const player = players.find((player) => player.id === Number(id))
 
     if (!player) {
         return (
             <div className="min-h-screen flex items-center justify-items-center">
-                <h1>Player not Found</h1>;
+                <h1>Player not Found</h1>
             </div>
         );
     }
