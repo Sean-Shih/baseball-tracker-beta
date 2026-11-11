@@ -8,9 +8,10 @@ interface PlayerCardProps {
     player: Player;
     onEdit: (player: Player) => void;
     onDelete: (player: Player) => void;
+    isDeleting: boolean;
 }
 
- export default function PlayerCard({ player, onEdit, onDelete }: PlayerCardProps) {
+ export default function PlayerCard({ player, onEdit, onDelete, isDeleting }: PlayerCardProps) {
 
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -121,6 +122,7 @@ interface PlayerCardProps {
                             variant="danger"
                             className="block w-full px-4 py-2 text-left text-base font-medium text-red-500 hover:bg-red-50"
                             role="menuitem"
+                            disabled={isDeleting}
                         >
                             Delete
                         </Button>

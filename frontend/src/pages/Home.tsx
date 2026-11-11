@@ -17,7 +17,7 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
-  const [, setIsDeleting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -46,7 +46,7 @@ function Home() {
         setPlayers(data)
       })
       .catch((error) => {
-        console .error("Error fetching players:", error);
+        console.error("Error fetching players:", error);
         setFetchError("Unable to load players, please try again.");
       })
       .finally(() => {
@@ -85,6 +85,9 @@ function Home() {
   };
 
   const handleDeletePlayer = (player: Player) => {
+
+    if (isDeleting) return;
+    
     const confirmed = window.confirm(`Are you sure you want to delete ${player.name}?`);
 
     if (!confirmed) return;
@@ -94,7 +97,10 @@ function Home() {
 
     deletePlayer(player.id)
       .then(() => {
-        fetchPlayers();
+        // fetchPlayers();
+        setPlayers((currentPlayers) => 
+          currentPlayers.filter((currentPlayer) => currentPlayer.id !== player.id)
+        );
       })
       .catch((error) => {
         console.error("Error deleting player:", error);
@@ -217,12 +223,14 @@ function Home() {
                 players={filteredPlayers}
                 onEdit={handleEditPlayer}
                 onDelete={handleDeletePlayer}
+                isDeleting={isDeleting}
               />
             ) : (
               <PlayerTable 
                 players={filteredPlayers}
                 onEdit={handleEditPlayer}
                 onDelete={handleDeletePlayer}
+                isDeleting={isDeleting}
               />
             )}
 

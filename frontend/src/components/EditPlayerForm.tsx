@@ -36,8 +36,8 @@ export default function EditPlayerForm({
         setErrorMessage("");
 
         const playerData = {
-            name,
-            team,
+            name: name.trim(),
+            team: team.trim(),
             position,
             battingAvg: battingAvg.trim() === "" ? null : Number(battingAvg),
             obp: obp.trim() === "" ? null : Number(obp),
@@ -55,7 +55,7 @@ export default function EditPlayerForm({
                 onPlayerUpdated();
             })
             .catch((error) => {
-                console.log("Error updating player:", error)
+                console.error("Error updating player:", error)
 
                 // setIsSubmitting(false);
                 setErrorMessage(error instanceof Error ? error.message : "An unexpected error occured"); 
@@ -164,7 +164,7 @@ export default function EditPlayerForm({
                     placeholder="Enter Slugging % (Ex: .000)"
                     type="number"
                     min={0}
-                    max={1}
+                    max={4}
                     step={0.001}
                 />
             </div>
@@ -196,6 +196,7 @@ export default function EditPlayerForm({
                     type="button"
                     onClick={onCancel}
                     className="rounded border px-4 py-2"
+                    disabled={isSubmitting}
                 >
                     Cancel
                 </button>

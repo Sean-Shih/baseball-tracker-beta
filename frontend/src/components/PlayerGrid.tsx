@@ -5,9 +5,10 @@ interface PlayerGridProps {
     players: Player[];
     onEdit: (player: Player) => void;
     onDelete: (player: Player) => void;
+    isDeleting: boolean;
 }
 
-export default function PlayerGrid( {players, onEdit, onDelete }: PlayerGridProps) {
+export default function PlayerGrid( {players, onEdit, onDelete, isDeleting }: PlayerGridProps) {
 
     return (
         <div id='playerCards' 
@@ -18,6 +19,7 @@ export default function PlayerGrid( {players, onEdit, onDelete }: PlayerGridProp
                     player={player}
                     onEdit={onEdit}
                     onDelete={onDelete}
+                    isDeleting={isDeleting}
                 />
             ))}
         </div>

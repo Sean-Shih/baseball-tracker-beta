@@ -61,6 +61,7 @@ function renderPlayerTable(players: Player[] = testPlayers) {
                 players={players}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                isDeleting={false}
             />
         </MemoryRouter>
     );
