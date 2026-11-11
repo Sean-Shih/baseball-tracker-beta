@@ -38,6 +38,7 @@ function renderPlayerCard(player: Player = testPlayer) {
                 player={player}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                isDeleting={false}
             />
         </MemoryRouter>
     );
@@ -103,6 +104,7 @@ describe("PlayerCard", () => {
                                 player={testPlayer} 
                                 onEdit={onEdit} 
                                 onDelete={onDelete} 
+                                isDeleting={false}
                             />
                         } 
                     />

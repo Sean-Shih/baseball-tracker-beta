@@ -148,7 +148,7 @@ describe("PlayerDetails", () => {
 
         renderPlayerDetails("999");
 
-        expect(await screen.findByText("Player not found"))
+        expect(await screen.findByText("Player not Found"))
             .toBeInTheDocument();
     });
 

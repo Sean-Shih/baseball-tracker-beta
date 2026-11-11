@@ -9,7 +9,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
 
     const [name, setName] = useState("")
     const [team, setTeam] = useState("")
-    const [position, setPosition] = useState("")
+    const [position, setPosition] = useState("P")
     const [battingAvg, setBattingAvg] = useState("")
     const [obp, setObp] = useState("");
     const [slugging, setSlugging] = useState("");
@@ -39,26 +39,6 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
         
         createPlayer(playerData)
             .then((savedPlayer) => {
-
-        //     })
-        // fetch(`${API_BASE_URL}/api/players`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(playerData)
-        // }).then( async (response) =>  {
-        //     if (!response.ok) {
-        //         const errorData: ApiErrorResponse = await response.json();
-
-        //         const errorMessage = errorData.errors ? Object.values(errorData.errors).join(" ")
-        //             : errorData.message;
-
-        //         throw new Error(errorMessage || "Failed to add player.");
-        //     }
-
-        //     return response.json();
-        // }).then((savedPlayer) => {
             console.log("Player added successfully:", savedPlayer);
 
             // setIsSubmitting(false)
@@ -69,14 +49,14 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
 
             setName("");
             setTeam("");
-            setPosition("");
+            setPosition("P");
             setBattingAvg("");
             setObp("");
             setSlugging("");
             setEra("");
 
         }).catch((error) => {
-            console.log("Error adding player:", error)
+            console.error("Error adding player:", error)
 
             // setIsSubmitting(false);
             setErrorMessage(error instanceof Error ? error.message : "An unexpected error occured.");
@@ -187,7 +167,7 @@ export default function AddPlayerForm({ onPlayerAdded }: AddPlayerFormProps) {
                     placeholder="Enter Slugging Percentage"
                     type="number"
                     min={0}
-                    max={1}
+                    max={4}
                     step={0.001}
                 />
             </div>

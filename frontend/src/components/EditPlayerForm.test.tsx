@@ -4,6 +4,10 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import EditPlayerForm from "./EditPlayerForm";
 import type { Player } from "../types/player";
 
+// vi.mock("../services/playerService", () => ({
+//     updatePlayer: vi.fn()
+// }));
+
 describe("EditPlayerForm", () => {
     const mockOnPlayerUpdated = vi.fn();
     const mockOnCancel = vi.fn();
@@ -323,15 +327,17 @@ describe("EditPlayerForm", () => {
     it("displays a fallback error when the API provides no error details", async () => {
         vi.spyOn(globalThis, "fetch").mockResolvedValue({
             ok: false,
-            json: () => Promise.resolve({}),
+            json: () => Promise.resolve({})
         } as Response);
 
         renderEditForm();
 
-        fireEvent.click(screen.getByRole("button", { name: "Save Changes" }));
+        fireEvent.click(
+            screen.getByRole("button", { name: "Save Changes" })
+        );
 
         expect(
-            await screen.findByText("Failed to edit player")
+            await screen.findByText("Failed to update player.")
         ).toBeInTheDocument();
     });
 

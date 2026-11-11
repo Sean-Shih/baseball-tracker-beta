@@ -7,6 +7,7 @@ interface PlayerTableProps {
     players: Player[];
     onEdit: (player: Player) => void;
     onDelete: (player: Player) => void;
+    isDeleting: boolean;
 }
 
 type SortKey = 
@@ -52,7 +53,7 @@ function getSortValue(
     }
 }
 
-export default function PlayerTable( { players, onEdit, onDelete }: PlayerTableProps ) {
+export default function PlayerTable( { players, onEdit, onDelete, isDeleting }: PlayerTableProps ) {
 
 
     const [sortKey, setSortKey] = useState<SortKey>("name");
@@ -258,6 +259,7 @@ export default function PlayerTable( { players, onEdit, onDelete }: PlayerTableP
                                     <button
                                         onClick={() => onDelete(player)}
                                         className="block w-fit px-3 py-1 text-base font-medium text-red-500 hover:text-red-700"
+                                        disabled={isDeleting}
                                     >
                                         Delete
                                     </button>
