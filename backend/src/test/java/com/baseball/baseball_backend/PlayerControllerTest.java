@@ -1,6 +1,6 @@
 package com.baseball.baseball_backend;
 
-import com.baseball.baseball_backend.repository.PlayerRepository;
+import com.baseball.baseball_backend.service.PlayerService;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,20 +9,31 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.print.attribute.standard.Media;
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // Loads web layer needed to test controller
 @WebMvcTest(PlayerController.class)
 public class PlayerControllerTest {
+
+    private Player createTestPlayer() {
+        return new Player(
+                1,
+                "Paul Skenes",
+                "Pittsburgh Pirates",
+                "P",
+                null,
+                null,
+                null,
+                new BigDecimal("2.05")
+        );
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,39 +43,20 @@ public class PlayerControllerTest {
 
     // supplies a fake PlayerRepository for testing
     @MockitoBean
-    private PlayerRepository playerRepository;
+    private PlayerService playerService;
 
     @Test
     void getPlayerById_whenPlayerDoesNotExist_returns404() throws Exception {
 
         // tells Mockito what repository should return when ID 999 is requested
-        when(playerRepository.findById(999)).thenReturn(Optional.empty());
+        when(playerService.getPlayerById(999)).thenReturn(Optional.empty());
 
         // simulates a GET request; andExpect verifies controller returns 404
         mockMvc.perform(get("/api/players/999")).andExpect(status().isNotFound());
     }
 
     @Test
-    void getPlayerById_whenPlayerDoesNotExist_doesNotReturn200() throws Exception {
-
-        when (playerRepository.findById(999)).thenReturn(Optional.empty());
-
-        mockMvc.perform(get("/api/players/999")).andExpect(status().isNotFound())
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
     void getPlayerById_whenPlayerExists_returns200() throws Exception {
-
-//        Player player = new Player(
-//                1,
-//                "Paul Skenes",
-//                "Pittsburgh Pirates",
-//                "P",
-//                ".000",
-//                "2.05"
-//        );
-
 
         Player player = new Player(
                 1,
@@ -77,7 +69,7 @@ public class PlayerControllerTest {
                 new BigDecimal("2.05")
         );
 
-        when((playerRepository.findById(1))).thenReturn(Optional.of(player));
+        when((playerService.getPlayerById(1))).thenReturn(Optional.of(player));
 
         mockMvc.perform(get("/api/players/1"))
                 .andExpect(status().isOk())
@@ -89,9 +81,36 @@ public class PlayerControllerTest {
     }
 
     @Test
+    void getPlayerById_whenPlayerExists_returnsAllStatistics() throws Exception {
+        Player player = new Player(
+                1,
+                "Aaron Judge",
+                "New York Yankees",
+                "RF",
+                new BigDecimal("0.322"),
+                new BigDecimal("0.458"),
+                new BigDecimal("0.701"),
+                null
+        );
+
+        when(playerService.getPlayerById(1)).thenReturn(Optional.of(player));
+
+        mockMvc.perform(get("/api/players/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Aaron Judge"))
+                .andExpect(jsonPath("$.team").value("New York Yankees"))
+                .andExpect(jsonPath("$.position").value("RF"))
+                .andExpect(jsonPath("$.battingAvg").value(0.322))
+                .andExpect(jsonPath("$.obp").value(0.458))
+                .andExpect(jsonPath("$.slugging").value(0.701))
+                .andExpect(jsonPath("$.ops").value(1.159))
+                .andExpect(jsonPath("$.era").doesNotExist());
+    }
+
+    @Test
     void getAllPlayers_whenNoPlayersExist_returnsEmptyArray() throws Exception {
 
-        when (playerRepository.findAll()).thenReturn(List.of());
+        when (playerService.getAllPlayers()).thenReturn(List.of());
 
         mockMvc.perform(get("/api/players"))
                 .andExpect(status().isOk())
@@ -106,11 +125,11 @@ public class PlayerControllerTest {
 //        Player player = new Player("Test Player", "Test Team", "P", ".250", "3.50");
 
         Player player = new Player("Test Player", "Test Team", "P",
-            new BigDecimal(".250"), new BigDecimal(".350"), new BigDecimal(".450"), new BigDecimal("3.50"));
+            new BigDecimal(".250"), new BigDecimal(".350"), new BigDecimal(".450"), null);
 
 
         // mockito intercepts save() and returns test player
-        when(playerRepository.save(any(Player.class)))
+        when(playerService.createPlayer(any(Player.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         // sends simulated JSON POST request
@@ -120,7 +139,12 @@ public class PlayerControllerTest {
                     .content(objectMapper.writeValueAsString(player)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Test Player"))
-                .andExpect(jsonPath("$.team").value("Test Team"));
+                .andExpect(jsonPath("$.team").value("Test Team"))
+                .andExpect(jsonPath("$.position").value("P"))
+                .andExpect(jsonPath("$.battingAvg").value(0.250))
+                .andExpect(jsonPath("$.obp").value(0.350))
+                .andExpect(jsonPath("$.slugging").value(0.450))
+                .andExpect(jsonPath("$.ops").value(0.800));
     }
 
     @Test
@@ -131,8 +155,8 @@ public class PlayerControllerTest {
                     "name": "",
                     "team": "Test Team",
                     "position": "P",
-                    "battingAvg": ".250",
-                    "era": "3.50"
+                    "battingAvg": 0.250,
+                    "era": 3.50
                 }
             """;
 
@@ -143,6 +167,7 @@ public class PlayerControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+
     @Test
     void createPlayer_whenTeamIsBlank_returns400() throws Exception {
 
@@ -151,8 +176,8 @@ public class PlayerControllerTest {
                     "name": "Test Name",
                     "team": "",
                     "position": "P",
-                    "battingAvg": ".250",
-                    "era": "3.50"
+                    "battingAvg": 0.250,
+                    "era": 3.50
                 }
             """;
 
@@ -171,12 +196,115 @@ public class PlayerControllerTest {
                     "name": "Test Name",
                     "team": "Test Team",
                     "position": "P",
-                    "battingAvg": "1.5",
-                    "era": "3.50"
+                    "battingAvg": 1.5
                 }
             """;
 
         // sends simulated JSON POST request
+        mockMvc.perform(post("/api/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createPlayer_whenBattingAverageIsNegative_returns400() throws Exception {
+
+        String invalidJson = """
+                {
+                    "name": "Test Name",
+                    "team": "Test Team",
+                    "position": "P",
+                    "battingAvg": -0.456
+                }
+            """;
+
+        // sends simulated JSON POST request
+        mockMvc.perform(post("/api/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createPlayer_whenObpAboveMax_returns400() throws Exception {
+        String invalidJson = """
+                {
+                    "name": "Test Player",
+                    "team": "Test Team",
+                    "position": "RF",
+                    "obp": 1.500
+                }
+            """;
+
+        mockMvc.perform(post("/api/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createPlayer_whenObpNegative_returns400() throws Exception {
+        String invalidJson = """
+                {
+                    "name": "Test Player",
+                    "team": "Test Team",
+                    "position": "RF",
+                    "obp": -0.500
+                }
+            """;
+
+        mockMvc.perform(post("/api/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createPlayer_whenSluggingAboveMax_returns400() throws Exception {
+        String invalidJson = """
+                {
+                    "name": "Test Player",
+                    "team": "Test Team",
+                    "position": "RF",
+                    "slugging": 4.500
+                }
+            """;
+
+        mockMvc.perform(post("/api/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createPlayer_whenSluggingNegative_returns400() throws Exception {
+        String invalidJson = """
+                {
+                    "name": "Test Player",
+                    "team": "Test Team",
+                    "position": "RF",
+                    "slugging": -0.500
+                }
+            """;
+
+        mockMvc.perform(post("/api/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createPlayer_whenEraNegative_returns400() throws Exception {
+        String invalidJson = """
+                {
+                    "name": "Test Player",
+                    "team": "Test Team",
+                    "position": "RF",
+                    "era": -1.2
+                }
+            """;
+
         mockMvc.perform(post("/api/players")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
@@ -191,32 +319,56 @@ public class PlayerControllerTest {
 
 //        Player existingPlayer = new Player(1, "Old Name", "Old Team", "P", ".200", "4.00");
         Player existingPlayer = new Player(1, "Old Name", "Old Team", "P",
-            new BigDecimal(".200"), new BigDecimal(".250"), new BigDecimal(".350"), new BigDecimal("4.00"));
+            new BigDecimal(".200"), new BigDecimal(".250"), new BigDecimal(".350"), null);
 
-        when(playerRepository.findById(1)).thenReturn(Optional.of(existingPlayer));
+        Player updatedPlayer = new Player(
+                1,
+                "Updated Player",
+                "Updated Team",
+                "P",
+                new BigDecimal("0.300"),
+                new BigDecimal("0.400"),
+                new BigDecimal("0.500"),
+                null
+        );
 
-        when(playerRepository.save(any(Player.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(playerService.updatePlayer(eq(1), any(Player.class)))
+                .thenReturn(Optional.of(updatedPlayer));
+
+//        when(playerService.findById(1)).thenReturn(Optional.of(existingPlayer));
+//
+//        when(playerService.save(any(Player.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         String updatedJson = """
                 {
                     "name": "Updated Player",
                     "team": "Updated Team",
                     "position": "P",
-                    "battingAvg": ".250",
-                    "era": "3.50"
+                    "battingAvg": 0.300,
+                    "obp": 0.400,
+                    "slugging": 0.500,
+                    "era": null
                 }
             """;
 
-        mockMvc.perform(put("/api/players/1").contentType(MediaType.APPLICATION_JSON).content(updatedJson))
+        mockMvc.perform(put("/api/players/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(updatedJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Player"))
-                .andExpect(jsonPath("$.team").value("Updated Team"));
+                .andExpect(jsonPath("$.team").value("Updated Team"))
+                .andExpect(jsonPath("$.battingAvg").value(0.300))
+                .andExpect(jsonPath("$.obp").value(0.400))
+                .andExpect(jsonPath("$.slugging").value(0.500))
+                .andExpect(jsonPath("$.ops").value(0.900))
+                .andExpect(jsonPath("$.era").doesNotExist());
     }
 
     @Test
     void updatePlayer_whenPlayerDoesNotExists_returns404() throws Exception {
 
-        when(playerRepository.findById(999)).thenReturn(Optional.empty());
+        when(playerService.updatePlayer(eq(999), any(Player.class))).thenReturn(Optional.empty());
 
         String updatedJson = """
                 {
@@ -255,24 +407,25 @@ public class PlayerControllerTest {
     @Test
     void deletePlayer_whenPlayerExists_returns204() throws Exception {
 
-//        Player player = new Player("Paul Skenes", "Pittsburgh Pirates", "P", ".000", "2.05");
-        Player player = new Player("Paul Skenes", "Pittsburgh Pirates", "P",
-            null, null, null, new BigDecimal("2.05"));
+        Player player = createTestPlayer();
 
-        when(playerRepository.findById(1)).thenReturn(Optional.of(player));
+        when(playerService.deletePlayer(1)).thenReturn(true);
 
         mockMvc.perform(delete("/api/players/1"))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(""));
+        verify(playerService, times(1)).deletePlayer(1);
     }
 
     @Test
     void deletePlayer_whenPlayerDoesNotExist_returns404() throws Exception {
 
-        when(playerRepository.findById(999)).thenReturn(Optional.empty());
+        when(playerService.deletePlayer(999)).thenReturn(false);
 
         mockMvc.perform(delete("/api/players/999"))
                 .andExpect(status().isNotFound());
+
+        verify(playerService, times(1)).deletePlayer(999);
     }
 
 }
