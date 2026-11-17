@@ -1,6 +1,6 @@
 import type { Player } from "../types/player";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, "").replace(/\/api\/players$/, "");;
 console.log("API BASE URL:", API_BASE_URL);
 
 interface ApiErrorResponse {
