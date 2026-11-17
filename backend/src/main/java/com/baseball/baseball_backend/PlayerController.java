@@ -27,13 +27,11 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    // @GetMapping("/api/players")
     @GetMapping 
     public List<Player> getPlayers() {
         return playerService.getAllPlayers();
     }
 
-    // @GetMapping("/api/players/{id}")
     @GetMapping("/{id}") 
     public Player getPlayer(@PathVariable int id) {
 
@@ -44,7 +42,6 @@ public class PlayerController {
         ));
     }
 
-    // @PostMapping("/api/players")
     @PostMapping
     public ResponseEntity<Player> createPlayer(@Valid @RequestBody Player player) {
 
@@ -54,7 +51,6 @@ public class PlayerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPlayer);
     }
 
-    // @PutMapping("/api/players/{id}")
     @PutMapping("{id}")
     public ResponseEntity<Player> updatePlayer(@PathVariable int id, @Valid @RequestBody Player updatedPlayer) {
 
@@ -67,7 +63,6 @@ public class PlayerController {
         return ResponseEntity.ok(savedPlayer);
     }
 
-    // @DeleteMapping("api/players/{id}")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletePlayer(@PathVariable int id) {
 
