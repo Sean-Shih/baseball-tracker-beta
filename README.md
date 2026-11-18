@@ -5,28 +5,33 @@ A full-stack web application for tracking and managing MLB players and their sta
 
 Built with **React**, **TypeScript**, **Spring Boot**, and **PostgreSQL**. The application provides an interactive dashboard for browsing individual player information, managing player statistics, and viewing batting and pitching statistics
 
+## Live Demo
+
+- **Frontend**: https://baseball-tracker-beta.onrender.com/
+- **Backend API**: https://baseball-tracker-backend.onrender.com/api/players
+
 ## Features
 
-- Player Management
-  - View a list of MLB players.
-  - Add new players.
-  - Edit existing player information.
-  - Delete players.
-  - View individual statistics.
-- Search, Filter, amd Sort.
-  - Sort players by name, team, position, and statistics.
-- View individual player details.
-  - Track batting statistics including AVG, OBP, SLG, and OPS.
-  - Track pitching statistics including ERA.
-  - Displays statistical summaries and comparison charts.
-  - Handle missing or unavailable statistics.
-- Data Persistance
-  - Store player information using PostgreSQL.
-  - Perform CRUD operations through Spring Boot REST API.
-- Testing and Error Handling
-  - Frontend component and integration tests.
-  - Backend API and validation tests.
-  - Centralized API error handling.
+### Player Management
+- View a list of MLB players.
+- Add new players.
+- Edit existing player information.
+- Delete players.
+- View individual statistics.
+### Search, Filter, amd Sort.
+- Sort players by name, team, position, and statistics.
+### View individual player details.
+- Track batting statistics including AVG, OBP, SLG, and OPS.
+- Track pitching statistics including ERA.
+- Displays statistical summaries and comparison charts.
+- Handle missing or unavailable statistics.
+### Data Persistance
+- Store player information using PostgreSQL.
+- Perform CRUD operations through Spring Boot REST API.
+### Testing and Error Handling
+- Frontend component and integration tests.
+- Backend API and validation tests.
+- Centralized API error handling.
 
 ## Technologies
 
@@ -55,6 +60,13 @@ Built with **React**, **TypeScript**, **Spring Boot**, and **PostgreSQL**. The a
 - Vitest
 - React Testing Library
 
+### DevOps and Deployment
+- Docker
+- Docker Compose
+- Nginx
+- GitHub Actions
+- Render
+- Neon PostgreSQL
 
 ## Getting Started
 
@@ -66,10 +78,14 @@ Install the following if you haven't:
 - Node.js
 - PostgreSQL
 - npm
+- For containerized development: Docker Desktop or Docker Engine with Docker Compose
 
 ### 1. Clone the repository
 
+```bash
 git clone https://github.com/Sean-Shih/baseball-tracker-beta.git
+cd baseball-tracker-beta
+```
 
 ### 2. Set up Database
 
@@ -142,9 +158,33 @@ The frontend will run at:
 http://localhost:5173
 ```
 
+## Docker Setup
+
+The application supports contanerized local developement with Docker Compose
+
+From project root directory, configure environment variables in .env file using .env.example as a reference.
+
+Build and start the application:
+```bash
+docker compose up --build
+```
+
+The application service will be available at:
+
+| Service | Local URL |
+|----------|-------------|
+| Frontend   | http://localhost:3000 |
+| Backend   | http://localhost:8080 |
+| PostgreSQL   | localhost:5432 |
+
+To stop containers:
+```bash
+docker compose down
+```
+
 ## API Endpoints
 
-| Method | Endpoint | Description
+| Method | Endpoint | Description|
 |----------|-------------| -----|
 | GET   | /api/players | Retrieve all players|
 | GET   | /api/players{id} | Retrieve a player by ID|
@@ -193,6 +233,16 @@ Build the backend with:
 ``` bash
 ./mvnw clean package
 ```
+
+### CI/CD
+
+GitHub actions automatically runs frontend and backend tests when changes are pushed to main branch or a pull request targets it.
+
+The workflow includes:
+- Frontend dependency installation
+- Frontend test execution
+- Frontend production build
+- Backend tests and Maven verification
 
 ## Screenshots
 
